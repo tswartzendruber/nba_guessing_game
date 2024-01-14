@@ -3,23 +3,65 @@ table, td {
   border-collapse: collapse;
   text-align: center;
 }
-
+th {
+  background-color: #f2f2f2;
+  width: 98%;
+}
 td {
-  padding: 10px;
+  padding: 5px;
 }
 
 table {
   margin-top: 170px;
   margin-left: auto;
   margin-right: auto;
+  width: 98%;
+}
+
+thead {
+  position: sticky;
+  box-sizing: border-box;
+  width: 100%;
+  top: 170px;
+  border: 1px solid black;
+  border-collapse: collapse;
 }
 
 .header {
-  padding-bottom: 30px;
+  padding-bottom: 34px;
   padding-top: 0px;
   background: white;
   position: fixed;
   top: 0;
   width: 100%;
   text-align: center;
+}
+
+#namesColumn {
+  width: 20%;
+}
+
+.generalStats {
+  width: 4%;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
 }
