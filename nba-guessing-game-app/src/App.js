@@ -292,6 +292,12 @@ function App() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const [display, setNavDisplay] = useState("none");
+
+  const toggleNavDisplay = () => {
+    setNavDisplay((previousDisplay) => (previousDisplay === "none" ? "block" : "none"));
+  };
+
   return (
     <div className="App">
       
@@ -303,6 +309,15 @@ function App() {
           <option value="2023-24">2023-24</option>
           <option value="2022-23">2022-23</option>
         </select>
+
+        <div class="navDropDown">
+          <button class="navDropDownButton" onClick={toggleNavDisplay}><i class="material-symbols-outlined">menu</i></button>
+          <div class="navDropDownOptions" style={{display: display,}}>
+            <a><p className="navOption">Guess the NBA Player</p></a>
+          </div>
+        </div>
+
+
       </div>
 
       {data.length ? (
