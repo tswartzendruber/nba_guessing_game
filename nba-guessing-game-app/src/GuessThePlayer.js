@@ -7,6 +7,7 @@ const GuessThePlayer = () => {
   const [data, setData] = useState([]);   // data is all the stats from the file
   const [season, setSeason] = useState("2023-24");   // season is the season the stats are from
   const [playerSelections, setPlayerSelections] = useState(null);   // playerSelections is the names of all players from that season
+  const [filterText, setFilterText] = useState("");   // filterText is the string typed into the text entry box
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,77 +38,76 @@ const GuessThePlayer = () => {
     fetchData();
   }, [season]);
 
+  var filteredOptions = "";
+
+  const [filterBy, setFilterBy] = useState("firstName");
+
+  const toggleFilterMethod = () => {
+    if (filterBy === "firstName") {
+      setFilterBy("lastName");
+      document.getElementById("switchLabel").innerHTML = "Sorting by Last Name";
+    } else {
+      setFilterBy("firstName");
+      document.getElementById("switchLabel").innerHTML = "Sorting by First Name";
+    }
+  };
+
+  if (filterBy === "lastName") {
+    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+      (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+  } else {
+    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+      (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+  }
+
   return (
     <>
       <div className="title">
         <h1>Guess The NBA Player</h1>
+      </div>
 
-        <input type="text" autocomplete="off" aria-autocomplete="list" aria-activedescendant="" aria-controls="autosuggest-autosuggest__results" placeholder="Guess 1 of 8" class=""></input>
+      <div className="body">
+        <h1>{season} NBA Stats</h1>
+        <p>Select a season to view stats from</p>
+
+        <select id="dropdown" value={season} onChange={e => setSeason(e.target.value)}>
+          <option value="2023-24">2023-24</option>
+          <option value="2022-23">2022-23</option>
+        </select>
+
+        <div id="switchDiv">
+          <label id="switchLabel">Sorting by First Name</label>
+          <label className="sortingSwitch">
+            <input onClick={toggleFilterMethod} type="checkbox"></input>
+            <span className="slider"></span>
+          </label>
+        </div>
+
+        <p></p>
+
+        <input 
+          type="text" 
+          autocomplete="off" 
+          aria-autocomplete="list" 
+          aria-activedescendant="" 
+          aria-controls="autosuggest-autosuggest__results" 
+          placeholder="Guess 1 of 8" class=""
+          onChange={(e) => setFilterText(e.target.value)}
+        />
 
         {playerSelections && (
           <select>
-            {Array.from(playerSelections.options).map((option, index) => (
+            {filteredOptions.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.text}
               </option>
             ))}
           </select>
         )}
+
       </div>
     </>
   );
 };
   
 export default GuessThePlayer;
-
-/*
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filterable Dropdown</title>
-    <style>
-        #myDropdown {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-<label for="myTextEntry">Enter Text:</label>
-<input type="text" id="myTextEntry" name="myTextEntry" oninput="filterOptions()">
-
-<label for="myDropdown">Select Option:</label>
-<select id="myDropdown" name="myDropdown"></select>
-
-<script>
-    const options = ['Apple', 'Banana', 'Cherry', 'Date', 'Grape', 'Lemon', 'Orange', 'Peach', 'Strawberry'];
-
-    function filterOptions() {
-        const inputText = document.getElementById('myTextEntry').value.toLowerCase();
-        const dropdown = document.getElementById('myDropdown');
-
-        // Clear existing options
-        dropdown.innerHTML = '';
-
-        // Filter options based on the typed letter
-        const filteredOptions = options.filter(option => option.toLowerCase().startsWith(inputText));
-
-        // Populate dropdown with filtered options
-        filteredOptions.forEach(option => {
-            const newOption = document.createElement('option');
-            newOption.value = option.toLowerCase();
-            newOption.textContent = option;
-            dropdown.appendChild(newOption);
-        });
-
-        // Show/hide the dropdown based on whether there are matching options
-        dropdown.style.display = filteredOptions.length > 0 ? 'block' : 'none';
-    }
-</script>
-
-</body>
-</html>
-
-*/
