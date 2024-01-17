@@ -7,8 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./Home";
-import Stats from "./Stats";
-import GuessThePlayer from "./GuessThePlayer";
+import Blogs from "./Blogs";
+import Contact from "./Contact";
 import NoPage from "./NoPage";
 
 export default function App() {
@@ -17,8 +17,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="stats" element={<Stats />} />
-          <Route path="guess-the-player" element={<GuessThePlayer />} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
