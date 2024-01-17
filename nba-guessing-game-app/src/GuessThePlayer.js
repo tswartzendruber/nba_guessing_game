@@ -8,6 +8,7 @@ const GuessThePlayer = () => {
   const [season, setSeason] = useState("2023-24");   // season is the season the stats are from
   const [playerSelections, setPlayerSelections] = useState(null);   // playerSelections is the names of all players from that season
   const [filterText, setFilterText] = useState("");   // filterText is the string typed into the text entry box
+  const [filterBy, setFilterBy] = useState("firstName");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,11 +37,18 @@ const GuessThePlayer = () => {
     };
 
     fetchData();
+
   }, [season]);
 
   var filteredOptions = "";
 
-  const [filterBy, setFilterBy] = useState("firstName");
+  if (filterBy === "lastName") {
+    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+      (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+  } else {
+    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+      (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+  }
 
   const toggleFilterMethod = () => {
     if (filterBy === "firstName") {
@@ -51,14 +59,6 @@ const GuessThePlayer = () => {
       document.getElementById("switchLabel").innerHTML = "Sorting by First Name";
     }
   };
-
-  if (filterBy === "lastName") {
-    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-      (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-  } else {
-    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-      (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-  }
 
   return (
     <>
@@ -86,17 +86,20 @@ const GuessThePlayer = () => {
         <p></p>
 
         <input 
+          className="guessingTextEntry"
           type="text" 
-          autocomplete="off" 
+          autoComplete="off" 
           aria-autocomplete="list" 
           aria-activedescendant="" 
           aria-controls="autosuggest-autosuggest__results" 
-          placeholder="Guess 1 of 8" class=""
+          placeholder="Guess 1 of 8"
           onChange={(e) => setFilterText(e.target.value)}
         />
 
+        <br></br>
+
         {playerSelections && (
-          <select>
+          <select className="guessingTextEntry" id="playerNames">
             {filteredOptions.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.text}

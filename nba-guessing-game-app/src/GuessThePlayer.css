@@ -6,6 +6,19 @@
     text-align: center;
 }
 
+.guessingTextEntry {
+    width: 200px;
+    height: 40px;
+    box-sizing: border-box;
+    border-radius: 0px;
+    outline: none;
+    border: 1px solid black;
+}
+
+#playerNames {
+    border-top-style: none;
+}
+
 .sortingSwitch {
     position: relative;
     display: inline-block;
@@ -57,5 +70,5 @@
 
 #switchDiv {
     padding-top: 10px;
-    
+
 }
