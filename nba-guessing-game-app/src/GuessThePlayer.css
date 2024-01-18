@@ -16,9 +16,27 @@
 }
 
 #playerNames {
-    border-top-style: none;
-    margin-left: 620px;
-    display: none;
+  margin-left: 620px;
+  display: none;
+  width: 200px;
+  box-sizing: border-box;
+  border-radius: 0px;
+  outline: none;
+  border: 1px solid black;
+  margin-top: 0px;
+  border-top-style: none;
+  padding: 0;
+  list-style-type: none;
+}
+
+#playerName {
+  padding: 10px;
+  user-select: none;
+}
+
+#playerName:hover {
+  cursor: pointer;
+  background-color: #f2f2f2;
 }
 
 .sortingSwitch {
@@ -72,5 +90,4 @@
 
 #switchDiv {
     padding-top: 10px;
-
 }
