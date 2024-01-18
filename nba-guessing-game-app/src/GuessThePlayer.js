@@ -10,6 +10,9 @@ const GuessThePlayer = () => {
   const [filterText, setFilterText] = useState("");   // filterText is the string typed into the text entry box
   const [filterBy, setFilterBy] = useState("firstName");
 
+  var filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+    (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(`./NBA_Stats_by_Season/${season}.csv`);
@@ -40,15 +43,23 @@ const GuessThePlayer = () => {
 
   }, [season]);
 
-  var filteredOptions = "";
-
-  if (filterBy === "lastName") {
-    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-      (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-  } else {
-    filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-      (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-  }
+  if (playerSelections) {
+    console.log("filterBy = " + filterBy);
+    if (filterBy === "lastName") {
+      console.log("I got into the if, meaning that filterBy === 'lastName' ");
+      filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+        (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+    } else {
+      console.log("I got into the else, meaning that filterBy === 'firstName' ");
+      filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
+        (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+    };
+    if (filteredOptions.length === 0 || filterText.length === 0) {
+      document.getElementById("playerNames").style.display = "none";
+    } else {
+      document.getElementById("playerNames").style.display = "block";
+    };
+  };
 
   const toggleFilterMethod = () => {
     if (filterBy === "firstName") {
@@ -98,7 +109,7 @@ const GuessThePlayer = () => {
 
         <br></br>
 
-        {playerSelections && (
+        {playerSelections ? (
           <select className="guessingTextEntry" id="playerNames">
             {filteredOptions.map((option, index) => (
               <option key={index} value={option.value}>
@@ -106,7 +117,7 @@ const GuessThePlayer = () => {
               </option>
             ))}
           </select>
-        )}
+        ) : <select className="guessingTextEntry" id="playerNames"></select>}
 
       </div>
     </>

@@ -17,6 +17,8 @@
 
 #playerNames {
     border-top-style: none;
+    margin-left: 620px;
+    display: none;
 }
 
 .sortingSwitch {
