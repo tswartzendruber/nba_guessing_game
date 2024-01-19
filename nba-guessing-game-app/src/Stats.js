@@ -1,4 +1,4 @@
-import './App.css';
+import './Stats.css';
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 
@@ -308,7 +308,7 @@ const Stats = () => {
       {data.length ? (
         <>
         <table id="statsTable">
-          <thead>
+          <thead id="statsTableHead">
             <tr>
               <th id="namesColumn" onClick={() => sortTable(0)}>PLAYER NAME</th>
               <th className="generalStats" onClick={() => sortTable(1)}>TEAM</th>
@@ -337,27 +337,27 @@ const Stats = () => {
             {currentRows.map((row, index) => (
               <>
               <tr key={index}>
-                <td>{row.Player}</td>
-                <td>{row.Tm}</td>
-                <td>{row.Pos}</td>
-                <td>{row.Age}</td>
-                <td>{row.G}</td>
-                <td>{row.MP}</td>
-                <td>{row.PTS}</td>
-                <td>{row.TRB}</td>
-                <td>{row.AST}</td>
-                <td>{row.STL}</td>
-                <td>{row.BLK}</td>
-                <td>{row.TOV}</td>
-                <td>{row.FG}</td>
-                <td>{row.FGA}</td>
-                <td>{row.FGpct}</td>
-                <td>{row.Threes}</td>
-                <td>{row.ThreesA}</td>
-                <td>{row.Threepct}</td>
-                <td>{row.FT}</td>
-                <td>{row.FTA}</td>
-                <td>{row.FTpct}</td>
+                <td className="statsTableData">{row.Player}</td>
+                <td className="statsTableData">{row.Tm}</td>
+                <td className="statsTableData">{row.Pos}</td>
+                <td className="statsTableData">{row.Age}</td>
+                <td className="statsTableData">{row.G}</td>
+                <td className="statsTableData">{row.MP}</td>
+                <td className="statsTableData">{row.PTS}</td>
+                <td className="statsTableData">{row.TRB}</td>
+                <td className="statsTableData">{row.AST}</td>
+                <td className="statsTableData">{row.STL}</td>
+                <td className="statsTableData">{row.BLK}</td>
+                <td className="statsTableData">{row.TOV}</td>
+                <td className="statsTableData">{row.FG}</td>
+                <td className="statsTableData">{row.FGA}</td>
+                <td className="statsTableData">{row.FGpct}</td>
+                <td className="statsTableData">{row.Threes}</td>
+                <td className="statsTableData">{row.ThreesA}</td>
+                <td className="statsTableData">{row.Threepct}</td>
+                <td className="statsTableData">{row.FT}</td>
+                <td className="statsTableData">{row.FTA}</td>
+                <td className="statsTableData">{row.FTpct}</td>
               </tr>
               </>
             ))}

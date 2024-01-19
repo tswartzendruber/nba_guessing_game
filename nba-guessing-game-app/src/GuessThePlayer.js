@@ -1,5 +1,5 @@
 import './GuessThePlayer.css';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Papa from "papaparse";
 
 const GuessThePlayer = () => {
@@ -11,6 +11,24 @@ const GuessThePlayer = () => {
   const [filterBy, setFilterBy] = useState("firstName");
   const headers = ["Player", "Tm", "Pos", "Age", "G", "MP", "PTS", "TRB", "AST", "STL", "BLK", "TOV", "FG", "FGA", "FGpct", "Threes", "ThreesA", "Threepct", "FT", "FTA", "FTpct"];
   const [numGuesses, setNumGuesses] = useState(1);
+  const [randomPlayer, setRandomPlayer] = useState("");
+  const randomPlayerRef = useRef();
+
+  var gameOverModal = document.getElementById("gameOverModal");
+  function openModal() {
+    gameOverModal.style.display = "block";
+  };
+  function closeModal() {
+    gameOverModal.style.display = "none";
+    const guessingTextEntryBox = document.getElementById("guessingTextEntryBox");
+    guessingTextEntryBox.disabled = true;
+    guessingTextEntryBox.value = "Game Over";
+  };
+  window.onclick = function(event) {
+    if (event.target === gameOverModal) {
+      closeModal();
+    };
+  };
 
   var filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
     (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
@@ -39,20 +57,26 @@ const GuessThePlayer = () => {
       options.forEach((option) => dropdown.add(option));
 
       setPlayerSelections(dropdown);
+
+      const randomPlayerIndex = Math.floor(Math.random() * (parsedData.length - 1) + 1);
+      setRandomPlayer(parsedData[randomPlayerIndex].Player);
+      randomPlayerRef.current = parsedData[randomPlayerIndex].Player;
+      console.log("randomPlayerIndex = " + randomPlayerIndex);
     };
 
     fetchData();
 
   }, [season]);
 
+  useEffect(() => {
+    console.log("randomPlayer = " + randomPlayer);
+  }, [randomPlayer])
+
   if (playerSelections) {
-    console.log("filterBy = " + filterBy);
     if (filterBy === "lastName") {
-      console.log("I got into the if, meaning that filterBy === 'lastName' ");
       filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
         (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
     } else {
-      console.log("I got into the else, meaning that filterBy === 'firstName' ");
       filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
         (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
     };
@@ -84,6 +108,10 @@ const GuessThePlayer = () => {
     setFilterText("");
   
     const newRow = document.createElement("tr");
+
+    const cell = document.createElement("td");
+    cell.textContent = numGuesses;
+    newRow.appendChild(cell);
   
     headers.forEach((header) => {
       const cell = document.createElement("td");
@@ -91,14 +119,24 @@ const GuessThePlayer = () => {
       newRow.appendChild(cell);
     });
   
-    const tableBody = document.querySelector("#statsTable tbody");
+    const tableBody = document.querySelector("#guessTable tbody");
     tableBody.appendChild(newRow);
 
-    if (numGuesses === 1) {
-      document.getElementById("statsTable").style.display = "block";
+    console.log("selectedPlayer.Player = " + selectedPlayer.Player);
+    console.log("randomPlayer = " + randomPlayerRef.current);
+
+    if (selectedPlayer.Player === randomPlayerRef.current) {
+      document.getElementById("gameOverModalText").innerHTML = "Congratulations! You won in " + numGuesses + " guesses."; //modal pop up (correct!)
+      openModal(); //gameOver("win");
+      return; //maybe return
     }
 
-    setNumGuesses((previousNumGuesses) => previousNumGuesses + 1);
+    if (numGuesses > 0 && numGuesses < 8) {
+      document.getElementById("guessTable").style.display = "block";
+      setNumGuesses((previousNumGuesses) => previousNumGuesses + 1);
+    } else if (numGuesses === 8) {
+      openModal();
+    };
   };
 
   return (
@@ -111,10 +149,21 @@ const GuessThePlayer = () => {
         <h1>{season} NBA Stats</h1>
         <p>Select a season to view stats from</p>
 
+        {/*
         <select id="dropdown" value={season} onChange={e => setSeason(e.target.value)}>
           <option value="2023-24">2023-24</option>
           <option value="2022-23">2022-23</option>
         </select>
+
+        <button onClick={openModal}>Open Modal</button>
+        */}
+
+        <div id="gameOverModal">
+          <div className="gameOverModalContent">
+            <span className="closeModalButton" onClick={closeModal}>&times;</span>
+            <p id="gameOverModalText">Modal Text</p>
+          </div>
+        </div>
 
         <div id="switchDiv">
           <label id="switchLabel">Sorting by First Name</label>
@@ -134,7 +183,7 @@ const GuessThePlayer = () => {
           aria-autocomplete="list" 
           aria-activedescendant="" 
           aria-controls="autosuggest-autosuggest__results" 
-          placeholder={"Guess " + numGuesses + " of 8"}
+          placeholder={"Remaining guesses: " + (8 - numGuesses + 1)}
           onChange={(e) => setFilterText(e.target.value)}
         />
 
@@ -151,36 +200,37 @@ const GuessThePlayer = () => {
         ) : <ul className="guessingTextEntry" id="playerNames"></ul>}
 
         {data.length ? (
-          <div id="statsTableDiv">
-            <table id="statsTable" style={{display: "none"}}>
-              <thead>
+          <>
+            <table id="guessTable" style={{display: "none"}}>
+              <thead id="guessTableHead">
                 <tr>
-                  <th id="namesColumn">PLAYER NAME</th>
-                  <th className="generalStats">TEAM</th>
-                  <th className="generalStats">POS</th>
-                  <th className="generalStats">AGE</th>
-                  <th className="generalStats">GP</th>
-                  <th className="generalStats">MIN</th>
-                  <th className="generalStats">PTS</th>
-                  <th className="generalStats">REB</th>
-                  <th className="generalStats">AST</th>
-                  <th className="generalStats">STL</th>
-                  <th className="generalStats">BLK</th>
-                  <th className="generalStats">TOV</th>
-                  <th className="generalStats">FGM</th>
-                  <th className="generalStats">FGA</th>
-                  <th className="generalStats">FG%</th>
-                  <th className="generalStats">3PM</th>
-                  <th className="generalStats">3PA</th>
-                  <th className="generalStats">3P%</th>
-                  <th className="generalStats">FTM</th>
-                  <th className="generalStats">FTA</th>
-                  <th className="generalStats">FT%</th>
+                  <th className="generalStatsGuessing">Guess</th>
+                  <th id="namesColumnGuessing">PLAYER NAME</th>
+                  <th className="generalStatsGuessing">TEAM</th>
+                  <th className="generalStatsGuessing">POS</th>
+                  <th className="generalStatsGuessing">AGE</th>
+                  <th className="generalStatsGuessing">GP</th>
+                  <th className="generalStatsGuessing">MIN</th>
+                  <th className="generalStatsGuessing">PTS</th>
+                  <th className="generalStatsGuessing">REB</th>
+                  <th className="generalStatsGuessing">AST</th>
+                  <th className="generalStatsGuessing">STL</th>
+                  <th className="generalStatsGuessing">BLK</th>
+                  <th className="generalStatsGuessing">TOV</th>
+                  <th className="generalStatsGuessing">FGM</th>
+                  <th className="generalStatsGuessing">FGA</th>
+                  <th className="generalStatsGuessing">FG%</th>
+                  <th className="generalStatsGuessing">3PM</th>
+                  <th className="generalStatsGuessing">3PA</th>
+                  <th className="generalStatsGuessing">3P%</th>
+                  <th className="generalStatsGuessing">FTM</th>
+                  <th className="generalStatsGuessing">FTA</th>
+                  <th className="generalStatsGuessing">FT%</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody id="guessTableBody"></tbody>
             </table>
-          </div>
+          </>
 
           ) : null}
 

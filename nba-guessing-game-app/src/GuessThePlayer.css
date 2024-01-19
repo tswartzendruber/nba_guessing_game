@@ -6,13 +6,60 @@
     text-align: center;
 }
 
-.guessingTextEntry {
-    width: 200px;
-    height: 40px;
-    box-sizing: border-box;
-    border-radius: 0px;
-    outline: none;
-    border: 1px solid black;
+.guessTableData, #guessTable {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+#namesColumn, .generalStats {
+  background-color: #f2f2f2;
+  width: 98%;
+}
+
+td {
+  padding: 5px;
+}
+
+#guessTable {
+  margin-top: 170px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+
+#guessTableHead {
+  position: sticky;
+  box-sizing: border-box;
+  width: 100%;
+  top: 170px;
+  border-bottom: 1px solid black;
+  border-collapse: collapse;
+}
+
+#headerRow {
+  position: sticky;
+  box-sizing: border-box;
+  width: 100%;
+  top: 170px;
+}
+
+.header {
+  padding-bottom: 34px;
+  padding-top: 0px;
+  background: white;
+  position: fixed;
+  top: 0;
+  width: 99%;
+  text-align: center;
+}
+
+#namesColumnGuessing {
+  width: 20%;
+}
+
+.generalStatsGuessing {
+  width: 4%;
 }
 
 #playerNames {
@@ -90,4 +137,39 @@
 
 #switchDiv {
     padding-top: 10px;
+}
+
+#gameOverModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.gameOverModalContent {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.closeModalButton {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeModalButton:hover {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }
