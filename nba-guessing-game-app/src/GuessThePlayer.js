@@ -10,9 +10,16 @@ const GuessThePlayer = () => {
   const [filterText, setFilterText] = useState("");   // filterText is the string typed into the text entry box
   const [filterBy, setFilterBy] = useState("firstName");
   const headers = ["Player", "Tm", "Pos", "Age", "G", "MP", "PTS", "TRB", "AST", "STL", "BLK", "TOV", "FG", "FGA", "FGpct", "Threes", "ThreesA", "Threepct", "FT", "FTA", "FTpct"];
+  //const headers = ["Player", "Tm", "Conf", "Div", "Pos", "Age", "Ht", "FGpct", "Threepct", "FTpct"];
+    // I need Conf, Div, and Height
+  // const headers = ["Player", "Pos", "Age", "FGpct", "Threepct", "FTpct"];
+
   const [numGuesses, setNumGuesses] = useState(1);
   const [randomPlayer, setRandomPlayer] = useState("");
   const randomPlayerRef = useRef();
+
+  const [playerLastRows, setPlayerLastRows] = useState({});
+  const [uniquePlayerNames, setUniquePlayerNames] = useState([]);
 
   var gameOverModal = document.getElementById("gameOverModal");
   function openModal() {
@@ -31,7 +38,7 @@ const GuessThePlayer = () => {
   };
 
   var filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-    (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
+    (option) => option.text.replace(/\s/g, "").toLowerCase().includes(filterText.replace(/\s/g, "").toLowerCase())): [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,10 +53,19 @@ const GuessThePlayer = () => {
       }).data;
       setData(parsedData);
 
+      const lastRows = parsedData.reduce((acc, row) => {
+        acc[row.Player] = row;
+        return acc;
+      }, {});
+
+      setPlayerLastRows(lastRows);
+      const uniqueNames = Array.from(new Set(parsedData.map(row => row.Player)));
+      setUniquePlayerNames(uniqueNames);
+
       const dropdown = document.createElement("select");
-      const options = parsedData.map((row, index) => {
+      const options = uniqueNames.map((name, index) => {
         const option = document.createElement("option");
-        option.text = row.Player;
+        option.text = name;
         option.value = index;
         return option;
       });
@@ -58,9 +74,9 @@ const GuessThePlayer = () => {
 
       setPlayerSelections(dropdown);
 
-      const randomPlayerIndex = Math.floor(Math.random() * (parsedData.length - 1) + 1);
-      setRandomPlayer(parsedData[randomPlayerIndex].Player);
-      randomPlayerRef.current = parsedData[randomPlayerIndex].Player;
+      const randomPlayerIndex = Math.floor(Math.random() * (uniqueNames.length - 1) + 1);
+      setRandomPlayer(uniqueNames[randomPlayerIndex]);
+      randomPlayerRef.current = uniqueNames[randomPlayerIndex];
       console.log("randomPlayerIndex = " + randomPlayerIndex);
     };
 
@@ -72,23 +88,15 @@ const GuessThePlayer = () => {
     console.log("randomPlayer = " + randomPlayer);
   }, [randomPlayer])
 
+  filteredOptions = filteredOptions.slice(0, 10);
+
   if (playerSelections) {
-    if (filterBy === "lastName") {
-      filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-        (option) => option.text.split(" ")[1].replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-    } else {
-      filteredOptions = playerSelections ? Array.from(playerSelections.options).filter(
-        (option) => option.text.replace(/\s/g, "").toLowerCase().startsWith(filterText.replace(/\s/g, "").toLowerCase())): [];
-    };
-
-    filteredOptions = filteredOptions.slice(0, 6);
-
     if (filteredOptions.length === 0 || filterText.length === 0) {
       document.getElementById("playerNames").style.display = "none";
     } else {
       document.getElementById("playerNames").style.display = "block";
     };
-  };
+  }
 
   const toggleFilterMethod = () => {
     if (filterBy === "firstName") {
@@ -101,8 +109,10 @@ const GuessThePlayer = () => {
   };
   
   const selectPlayer = (e) => {
-    const selectedPlayerIndex = e.target.value;
-    const selectedPlayer = data[selectedPlayerIndex];
+    const selectedPlayerName = e.target.textContent;
+    const selectedPlayerFirstOccurrence = data.find((player) => player.Player === selectedPlayerName);
+    const selectedPlayerLastOccurrence = playerLastRows[selectedPlayerName];
+
 
     document.getElementById("guessingTextEntryBox").value = "";
     setFilterText("");
@@ -115,18 +125,28 @@ const GuessThePlayer = () => {
   
     headers.forEach((header) => {
       const cell = document.createElement("td");
-      cell.textContent = selectedPlayer[header];
+
+      if (header === "Tm") {
+        cell.textContent = selectedPlayerLastOccurrence[header];
+      } else {
+        cell.textContent = selectedPlayerFirstOccurrence[header];
+      }
+
       newRow.appendChild(cell);
     });
   
     const tableBody = document.querySelector("#guessTable tbody");
     tableBody.appendChild(newRow);
 
-    console.log("selectedPlayer.Player = " + selectedPlayer.Player);
+    console.log("selectedPlayer.Player = " + selectedPlayerFirstOccurrence.Player);
     console.log("randomPlayer = " + randomPlayerRef.current);
 
-    if (selectedPlayer.Player === randomPlayerRef.current) {
-      document.getElementById("gameOverModalText").innerHTML = "Congratulations! You won in " + numGuesses + " guesses."; //modal pop up (correct!)
+    if (selectedPlayerName === randomPlayerRef.current) {
+      if (numGuesses === 1) {
+        document.getElementById("gameOverModalText").innerHTML = "Congratulations! You won in " + numGuesses + " guess."; //modal pop up (correct!)
+      } else {
+        document.getElementById("gameOverModalText").innerHTML = "Congratulations! You won in " + numGuesses + " guesses."; //modal pop up (correct!)
+      }
       openModal(); //gameOver("win");
       return; //maybe return
     }
@@ -149,19 +169,10 @@ const GuessThePlayer = () => {
         <h1>{season} NBA Stats</h1>
         <p>Select a season to view stats from</p>
 
-        {/*
-        <select id="dropdown" value={season} onChange={e => setSeason(e.target.value)}>
-          <option value="2023-24">2023-24</option>
-          <option value="2022-23">2022-23</option>
-        </select>
-
-        <button onClick={openModal}>Open Modal</button>
-        */}
-
         <div id="gameOverModal">
           <div className="gameOverModalContent">
             <span className="closeModalButton" onClick={closeModal}>&times;</span>
-            <p id="gameOverModalText">Modal Text</p>
+            <p id="gameOverModalText">You Lost! The player was {randomPlayerRef.current}.</p>
           </div>
         </div>
 
