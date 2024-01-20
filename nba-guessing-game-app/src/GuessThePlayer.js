@@ -9,10 +9,11 @@ const GuessThePlayer = () => {
   const [playerSelections, setPlayerSelections] = useState(null);   // playerSelections is the names of all players from that season
   const [filterText, setFilterText] = useState("");   // filterText is the string typed into the text entry box
   const [filterBy, setFilterBy] = useState("firstName");
-  const headers = ["Player", "Tm", "Pos", "Age", "G", "MP", "PTS", "TRB", "AST", "STL", "BLK", "TOV", "FG", "FGA", "FGpct", "Threes", "ThreesA", "Threepct", "FT", "FTA", "FTpct"];
+  // const headers = ["Player", "Tm", "Pos", "Age", "G", "MP", "PTS", "TRB", "AST", "STL", "BLK", "TOV", "FG", "FGA", "FGpct", "Threes", "ThreesA", "Threepct", "FT", "FTA", "FTpct"];
   //const headers = ["Player", "Tm", "Conf", "Div", "Pos", "Age", "Ht", "FGpct", "Threepct", "FTpct"];
     // I need Conf, Div, and Height
   // const headers = ["Player", "Pos", "Age", "FGpct", "Threepct", "FTpct"];
+  const headers = ["Player", "Tm", "Conf", "Div", "Pos", "Age", "PTS", "TRB", "AST", "Threes"];
 
   const [numGuesses, setNumGuesses] = useState(1);
   const [randomPlayer, setRandomPlayer] = useState("");
@@ -20,6 +21,11 @@ const GuessThePlayer = () => {
 
   const [playerLastRows, setPlayerLastRows] = useState({});
   const [uniquePlayerNames, setUniquePlayerNames] = useState([]);
+  const statsOfRandomPlayer = useRef();
+  const randomPlayerCurrentTeam = useRef();
+
+  const randomPlayerConf = useRef();
+  const randomPlayerDivision = useRef();
 
   var gameOverModal = document.getElementById("gameOverModal");
   function openModal() {
@@ -75,9 +81,38 @@ const GuessThePlayer = () => {
       setPlayerSelections(dropdown);
 
       const randomPlayerIndex = Math.floor(Math.random() * (uniqueNames.length - 1) + 1);
-      setRandomPlayer(uniqueNames[randomPlayerIndex]);
-      randomPlayerRef.current = uniqueNames[randomPlayerIndex];
+      const randomlyGeneratedPlayer = uniqueNames[randomPlayerIndex];
+      setRandomPlayer(randomlyGeneratedPlayer);
+      randomPlayerRef.current = randomlyGeneratedPlayer;
+
       console.log("randomPlayerIndex = " + randomPlayerIndex);
+
+      statsOfRandomPlayer.current = parsedData.find(player => player.Player === randomlyGeneratedPlayer);
+      console.log("Stats of randomly generated player: ", statsOfRandomPlayer);
+
+      randomPlayerCurrentTeam.current = lastRows[randomlyGeneratedPlayer].Tm;
+      var randomPlayerTeam = lastRows[randomlyGeneratedPlayer].Tm;
+      
+      if (randomPlayerTeam === "BOS" || randomPlayerTeam === "BRK" || randomPlayerTeam === "NYK" || randomPlayerTeam === "PHI" || randomPlayerTeam === "TOR") {
+        randomPlayerDivision.current = "Atlantic";
+        randomPlayerConf.current = "East";
+      } else if (randomPlayerTeam === "CLE" || randomPlayerTeam === "CHI" || randomPlayerTeam === "DET" || randomPlayerTeam === "IND" || randomPlayerTeam === "MIL") {
+        randomPlayerDivision.current = "Central";
+        randomPlayerConf.current = "East";
+      } else if (randomPlayerTeam === "ATL" || randomPlayerTeam === "CHO" || randomPlayerTeam === "MIA" || randomPlayerTeam === "ORL" || randomPlayerTeam === "WAS") {
+        randomPlayerDivision.current = "Southeast";
+        randomPlayerConf.current = "East";
+      } else if (randomPlayerTeam === "DEN" || randomPlayerTeam === "MIN" || randomPlayerTeam === "POR" || randomPlayerTeam === "OKC" || randomPlayerTeam === "UTA") {
+        randomPlayerDivision.current = "Northwest";
+        randomPlayerConf.current = "West";
+      } else if (randomPlayerTeam === "GSW" || randomPlayerTeam === "LAC" || randomPlayerTeam === "LAL" || randomPlayerTeam === "PHO" || randomPlayerTeam === "SAC") {
+        randomPlayerDivision.current = "Pacific";
+        randomPlayerConf.current = "West";
+      } else if (randomPlayerTeam === "DAL" || randomPlayerTeam === "HOU" || randomPlayerTeam === "MEM" || randomPlayerTeam === "NOP" || randomPlayerTeam === "SAS") {
+        randomPlayerDivision.current = "Southwest";
+        randomPlayerConf.current = "West";
+      };
+      
     };
 
     fetchData();
@@ -113,7 +148,6 @@ const GuessThePlayer = () => {
     const selectedPlayerFirstOccurrence = data.find((player) => player.Player === selectedPlayerName);
     const selectedPlayerLastOccurrence = playerLastRows[selectedPlayerName];
 
-
     document.getElementById("guessingTextEntryBox").value = "";
     setFilterText("");
   
@@ -122,24 +156,156 @@ const GuessThePlayer = () => {
     const cell = document.createElement("td");
     cell.textContent = numGuesses;
     newRow.appendChild(cell);
+
+    var team;
   
     headers.forEach((header) => {
       const cell = document.createElement("td");
 
       if (header === "Tm") {
         cell.textContent = selectedPlayerLastOccurrence[header];
+        console.log("DEBUG: selectedPlayerLastOccurrence[header]: " + selectedPlayerLastOccurrence[header]);
+        console.log("DEBUG: randomPlayerCurrentTeam.current: " + randomPlayerCurrentTeam.current);
+        if (selectedPlayerLastOccurrence.Tm === randomPlayerCurrentTeam.current) {
+          cell.classList.add("highlightGreen");
+        };
+        newRow.appendChild(cell);
+      
+      } else if (header === "Conf") {
+        team = selectedPlayerLastOccurrence["Tm"];
+        if (team === "BOS" || team === "BRK" || team === "NYK" || team === "PHI" || team === "TOR" || 
+            team === "CLE" || team === "CHI" || team === "DET" || team === "IND" || team === "MIL" || 
+            team === "ATL" || team === "CHO" || team === "MIA" || team === "ORL" || team === "WAS") {
+              cell.textContent = "East";
+        } else {
+          cell.textContent = "West";
+        };
+        if (randomPlayerConf.current === cell.textContent) {
+          cell.classList.add("highlightGreen");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "Div") {
+        team = selectedPlayerLastOccurrence["Tm"];
+        if (team === "BOS" || team === "BRK" || team === "NYK" || team === "PHI" || team === "TOR") {
+          cell.textContent = "Atlantic";
+        } else if (team === "CLE" || team === "CHI" || team === "DET" || team === "IND" || team === "MIL") {
+          cell.textContent = "Central";
+        } else if (team === "ATL" || team === "CHO" || team === "MIA" || team === "ORL" || team === "WAS") {
+          cell.textContent = "Southeast";
+        } else if (team === "DEN" || team === "MIN" || team === "POR" || team === "OKC" || team === "UTA") {
+          cell.textContent = "Northwest";
+        } else if (team === "GSW" || team === "LAC" || team === "LAL" || team === "PHO" || team === "SAC") {
+          cell.textContent = "Pacific";
+        } else if (team === "DAL" || team === "HOU" || team === "MEM" || team === "NOP" || team === "SAS") {
+          cell.textContent = "Southwest";
+        };
+        if (randomPlayerDivision.current === cell.textContent) {
+          cell.classList.add("highlightGreen");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "Pos") {
+        cell.textContent = selectedPlayerFirstOccurrence[header];
+        if (selectedPlayerFirstOccurrence.Pos === statsOfRandomPlayer.current.Pos) {
+          cell.classList.add("highlightGreen");
+        };
+        newRow.appendChild(cell);
+        
+      } else if (header === "Age") {
+        var selectedPlayerAge = parseFloat(selectedPlayerFirstOccurrence.Age);
+        var randomPlayerAge = parseFloat(statsOfRandomPlayer.current.Age);
+        if (selectedPlayerAge === randomPlayerAge) {
+          cell.textContent = selectedPlayerAge;
+          cell.classList.add("highlightGreen");
+        } else if (Math.abs(selectedPlayerAge - randomPlayerAge) <= 2) {
+          cell.classList.add("highlightYellow");
+        };
+        if (selectedPlayerAge < randomPlayerAge) {
+          cell.textContent = (selectedPlayerAge + " ↑");
+        } else if (selectedPlayerAge > randomPlayerAge) {
+          cell.textContent = (selectedPlayerAge + " ↓");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "PTS") {
+        var selectedPlayerPTS = parseFloat(selectedPlayerFirstOccurrence.PTS);
+        var randomPlayerPTS = parseFloat(statsOfRandomPlayer.current.PTS);
+        if (selectedPlayerPTS === randomPlayerPTS) {
+          cell.textContent = selectedPlayerPTS;
+          cell.classList.add("highlightGreen");
+        } else if (Math.abs(selectedPlayerPTS - randomPlayerPTS) <= 2) {
+          cell.classList.add("highlightYellow");
+        };
+        if (selectedPlayerPTS < randomPlayerPTS) {
+          cell.textContent = (selectedPlayerPTS + " ↑");
+        } else if (selectedPlayerPTS > randomPlayerPTS){
+          cell.textContent = (selectedPlayerPTS + " ↓");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "TRB") {
+        var selectedPlayerREB = parseFloat(selectedPlayerFirstOccurrence.TRB);
+        var randomPlayerREB = parseFloat(statsOfRandomPlayer.current.TRB);
+        if (selectedPlayerREB === randomPlayerREB) {
+          cell.textContent = selectedPlayerREB;
+          cell.classList.add("highlightGreen");
+        } else if (Math.abs(selectedPlayerREB - randomPlayerREB) <= 2) {
+          cell.classList.add("highlightYellow");
+        };
+        if (selectedPlayerREB < randomPlayerREB) {
+          cell.textContent = (selectedPlayerREB + " ↑");
+        } else if (selectedPlayerREB > randomPlayerREB){
+          cell.textContent = (selectedPlayerREB + " ↓");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "AST") {
+        var selectedPlayerAST = parseFloat(selectedPlayerFirstOccurrence.AST);
+        var randomPlayerAST = parseFloat(statsOfRandomPlayer.current.AST);
+        if (selectedPlayerAST === randomPlayerAST) {
+          cell.textContent = selectedPlayerAST;
+          cell.classList.add("highlightGreen");
+        } else if (Math.abs(selectedPlayerAST - randomPlayerAST) <= 2) {
+          cell.classList.add("highlightYellow");
+        };
+        if (selectedPlayerAST < randomPlayerAST) {
+          cell.textContent = (selectedPlayerAST + " ↑");
+        } else if (selectedPlayerAST > randomPlayerAST){
+          cell.textContent = (selectedPlayerAST + " ↓");
+        };
+        newRow.appendChild(cell);
+
+      } else if (header === "Threes") {
+        var selectedPlayer3PM = parseFloat(selectedPlayerFirstOccurrence.Threes);
+        var randomPlayer3PM = parseFloat(statsOfRandomPlayer.current.Threes);
+        if (selectedPlayer3PM === randomPlayer3PM) {
+          cell.textContent = selectedPlayer3PM;
+          cell.classList.add("highlightGreen");
+        } else if (Math.abs(selectedPlayer3PM - randomPlayer3PM) <= 2) {
+          cell.classList.add("highlightYellow");
+        };
+        if (selectedPlayer3PM < randomPlayer3PM) {
+          cell.textContent = (selectedPlayer3PM + " ↑");
+        } else if (selectedPlayer3PM > randomPlayer3PM){
+          cell.textContent = (selectedPlayer3PM + " ↓");
+        };
+        newRow.appendChild(cell);
+
       } else {
         cell.textContent = selectedPlayerFirstOccurrence[header];
-      }
+        newRow.appendChild(cell);
+      };
 
-      newRow.appendChild(cell);
     });
   
     const tableBody = document.querySelector("#guessTable tbody");
     tableBody.appendChild(newRow);
 
-    console.log("selectedPlayer.Player = " + selectedPlayerFirstOccurrence.Player);
-    console.log("randomPlayer = " + randomPlayerRef.current);
+    //console.log("selectedPlayer.Player = " + selectedPlayerFirstOccurrence.Player);
+    //console.log("selectedPlayer stats = ", selectedPlayerFirstOccurrence);
+    //console.log("randomPlayer = " + randomPlayerRef.current);
+    //console.log("statsOfRandomPlayer.current.Player = " + statsOfRandomPlayer.current.Player);
 
     if (selectedPlayerName === randomPlayerRef.current) {
       if (numGuesses === 1) {
@@ -176,6 +342,7 @@ const GuessThePlayer = () => {
           </div>
         </div>
 
+        {/* 
         <div id="switchDiv">
           <label id="switchLabel">Sorting by First Name</label>
           <label className="sortingSwitch">
@@ -183,6 +350,7 @@ const GuessThePlayer = () => {
             <span className="slider"></span>
           </label>
         </div>
+        */}
 
         <p></p>
 
@@ -218,25 +386,14 @@ const GuessThePlayer = () => {
                   <th className="generalStatsGuessing">Guess</th>
                   <th id="namesColumnGuessing">PLAYER NAME</th>
                   <th className="generalStatsGuessing">TEAM</th>
+                  <th className="generalStatsGuessing">CONF</th>
+                  <th className="generalStatsGuessing">DIV</th>
                   <th className="generalStatsGuessing">POS</th>
                   <th className="generalStatsGuessing">AGE</th>
-                  <th className="generalStatsGuessing">GP</th>
-                  <th className="generalStatsGuessing">MIN</th>
                   <th className="generalStatsGuessing">PTS</th>
                   <th className="generalStatsGuessing">REB</th>
                   <th className="generalStatsGuessing">AST</th>
-                  <th className="generalStatsGuessing">STL</th>
-                  <th className="generalStatsGuessing">BLK</th>
-                  <th className="generalStatsGuessing">TOV</th>
-                  <th className="generalStatsGuessing">FGM</th>
-                  <th className="generalStatsGuessing">FGA</th>
-                  <th className="generalStatsGuessing">FG%</th>
                   <th className="generalStatsGuessing">3PM</th>
-                  <th className="generalStatsGuessing">3PA</th>
-                  <th className="generalStatsGuessing">3P%</th>
-                  <th className="generalStatsGuessing">FTM</th>
-                  <th className="generalStatsGuessing">FTA</th>
-                  <th className="generalStatsGuessing">FT%</th>
                 </tr>
               </thead>
               <tbody id="guessTableBody"></tbody>

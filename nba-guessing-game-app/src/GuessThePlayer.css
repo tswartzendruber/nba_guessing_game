@@ -173,3 +173,13 @@ td {
   text-decoration: none;
   cursor: pointer;
 }
+
+.highlightGreen {
+  background-color: rgb(42, 210, 42);
+  color: white;
+}
+
+.highlightYellow {
+  background-color: rgb(243, 234, 56);
+  color: black;
+}
