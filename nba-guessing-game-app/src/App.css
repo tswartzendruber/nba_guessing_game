@@ -5,7 +5,7 @@
     top: 0;
     background-color: rgb(240, 239, 239);
     z-index: 1;
-    width: 99%;
+    width: 100vw;
 }
 
 .navDropDownButton {
@@ -68,18 +68,30 @@ body {
     text-align: center;
 }
 
-#statsTable {
+.scroll {
+    overflow-y :scroll;
+    height: 31vw;
+    border: none;
+    background-color: white;
+    width: 96vw;
+    overflow-x: hidden;
     margin-top: 220px;
     margin-left: auto;
     margin-right: auto;
+}
+
+#statsTable {
+    margin-left: auto;
+    margin-right: 0;
     width: 98%;
     border-collapse: collapse;
     text-align: center;
+    overflow-y: scroll;
 }
 
 #statsTableHead {
     position: sticky;
-    top: 220px;
+    top: 0.1px;
     background-color: white;
     z-index: 1;
     user-select: none;

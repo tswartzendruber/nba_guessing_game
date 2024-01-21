@@ -281,7 +281,22 @@ const Stats = () => {
         header: true,
         skipEmptyLines: true
       }).data;
-      setData(parsedData);
+
+      const uniquePlayers = Array.from(new Set(parsedData.map(row => row.Player)));
+
+      const lastTeam = {};
+
+      parsedData.forEach(row => {
+        lastTeam[row.Player] = row.Tm;
+      });
+
+      const uniqueData = uniquePlayers.map(playerName => {
+        return {
+          ...parsedData.find(row => row.Player === playerName), Tm: lastTeam[playerName]
+        };
+      });
+      
+      setData(uniqueData);
     };
     fetchData();
   }, [season]);
@@ -307,6 +322,7 @@ const Stats = () => {
 
       {data.length ? (
         <>
+        <div className="scroll">
         <table id="statsTable">
           <thead>
             <tr id="statsTableHead">
@@ -363,6 +379,7 @@ const Stats = () => {
             ))}
           </tbody>
         </table>
+        </div>
 
         <div className="pagination">
         {[...Array(Math.ceil(data.length / rowsPerPage)).keys()].map(

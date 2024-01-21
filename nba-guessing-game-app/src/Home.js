@@ -1,3 +1,5 @@
+import './App.css';
+
 /*
 Classic Game Mode
 -----------------
@@ -32,7 +34,31 @@ Poole Party (Custom Game Mode)
 */
 
 const Home = () => {
-    return <h1>Home</h1>;
+    return (
+      <>
+        <div className="scroll">
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
+        </div>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+        <h1>Kyrie sucks</h1>
+    </>
+    );
   };
   
 export default Home;
