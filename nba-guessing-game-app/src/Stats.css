@@ -51,7 +51,7 @@ td {
 .header {
   padding-bottom: 34px;
   padding-top: 0px;
-  background: white;
+  background: black;
   position: fixed;
   top: 0;
   width: 99%;
@@ -109,6 +109,10 @@ td {
 .navDropDownButton {
   border: none;
   padding: 14px 16px;
+}
+
+.navDropDownButton:hover {
+  cursor: pointer;
 }
 
 .navDropDownOptions {

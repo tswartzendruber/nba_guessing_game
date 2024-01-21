@@ -15,9 +15,9 @@ const Layout = () => {
       <div class="navDropDown">
           <button class="navDropDownButton" onClick={toggleNavDisplay}><i class="material-symbols-outlined">menu</i></button>
           <div class="navDropDownOptions" style={{display: display,}}>
-              <p className="navPara"><Link to="/">Home</Link></p>
-              <p className="navPara"><Link to="/stats">NBA Stats</Link></p>
-              <p className="navPara"><Link to="/guess-the-player">Guess The NBA Player</Link></p>
+              <Link to="/"><p className="navPara">Home</p></Link>
+              <Link to="/stats"><p className="navPara">NBA Stats</p></Link>
+              <Link to="/guess-the-player"><p className="navPara">Guess The NBA Player</p></Link>
           </div>
       </div>
 

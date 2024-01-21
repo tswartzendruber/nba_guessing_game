@@ -1,4 +1,4 @@
-import './Stats.css';
+import './App.css';
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 
@@ -308,8 +308,8 @@ const Stats = () => {
       {data.length ? (
         <>
         <table id="statsTable">
-          <thead id="statsTableHead">
-            <tr>
+          <thead>
+            <tr id="statsTableHead">
               <th id="namesColumn" onClick={() => sortTable(0)}>PLAYER NAME</th>
               <th className="generalStats" onClick={() => sortTable(1)}>TEAM</th>
               <th className="generalStats" onClick={() => sortTable(2)}>POS</th>

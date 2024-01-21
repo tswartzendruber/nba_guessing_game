@@ -1,4 +1,4 @@
-import './GuessThePlayer.css';
+import './App.css';
 import React, { useState, useEffect, useRef } from "react";
 import Papa from "papaparse";
 
@@ -37,9 +37,18 @@ const GuessThePlayer = () => {
     guessingTextEntryBox.disabled = true;
     guessingTextEntryBox.value = "Game Over";
   };
+  var rulesModal = document.getElementById("rulesModal");
+  function openRulesModal() {
+    rulesModal.style.display = "block";
+  };
+  function closeRulesModal() {
+    rulesModal.style.display = "none";
+  };
   window.onclick = function(event) {
     if (event.target === gameOverModal) {
       closeModal();
+    } else if (event.target === rulesModal) {
+      closeRulesModal();
     };
   };
 
@@ -327,6 +336,17 @@ const GuessThePlayer = () => {
 
   return (
     <>
+      <button id="openRulesModalButton" onClick={openRulesModal}>Rules</button>
+      
+      <div id="rulesModal">
+        <div className="rulesModalContent">
+          <span className="closeRulesModalButton" onClick={closeRulesModal}>&times;</span>
+          <p id="rulesModalText">
+            <h1>Rules</h1>
+          </p>
+        </div>
+      </div>
+
       <div className="title">
         <h1>Guess The NBA Player</h1>
       </div>
@@ -367,7 +387,8 @@ const GuessThePlayer = () => {
         />
 
         <br></br>
-
+        
+        <div id="playerNamesDiv">
         {playerSelections ? (
           <ul id="playerNames">
             {filteredOptions.map((option, index) => (
@@ -377,6 +398,7 @@ const GuessThePlayer = () => {
             ))}
           </ul>
         ) : <ul className="guessingTextEntry" id="playerNames"></ul>}
+        </div>
 
         {data.length ? (
           <>

@@ -1,0 +1,313 @@
+/* Navigation Menu */
+
+.navDropDown {
+    position: fixed;
+    top: 0;
+    background-color: rgb(240, 239, 239);
+    z-index: 1;
+    width: 99%;
+}
+
+.navDropDownButton {
+    border: none;
+    padding: 14px 16px;
+}
+
+.navDropDownButton:hover {
+    cursor: pointer;
+}
+
+.navDropDownOptions {
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.navOption {
+    user-select: none;
+    font-size: 20px;
+}
+
+.navPara {
+    height: 30px;
+    margin: 0;
+    padding-left: 10px;
+    padding-top: 7px;
+}
+
+.navPara:hover {
+    background-color: #f2f2f2;
+}
+
+/* ---------------------------------------------- */
+
+/* Basic */
+
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    overflow: auto;
+}
+
+/* ---------------------------------------------- */
+
+/* Stats.js */
+
+.header {
+    padding-bottom: 34px;
+    padding-top: 0px;
+    background: white;
+    position: fixed;
+    top: 50px;
+    width: 99%;
+    text-align: center;
+}
+
+#statsTable {
+    margin-top: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#statsTableHead {
+    position: sticky;
+    top: 220px;
+    background-color: white;
+    z-index: 1;
+    user-select: none;
+}
+
+#namesColumn {
+    width: 20%;
+    border: 1px solid black;
+}
+
+.generalStats {
+    width: 4%;
+    border: 1px solid black;
+}
+
+#namesColumn:hover, .generalStats:hover {
+    cursor: pointer;
+}
+
+.statsTableData {
+    border: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 10pt;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+/* ---------------------------------------------- */
+
+/* GuessThePlayer.js */
+
+#openRulesModalButton {
+    position: fixed;
+    top: 65px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+#rulesModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.rulesModalContent {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.closeRulesModalButton {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeRulesModalButton:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.title {
+    text-align: center;
+    margin-top: 70px;
+}
+
+.body {
+    text-align: center;
+}
+
+#gameOverModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+  
+.gameOverModalContent {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+  
+.closeModalButton {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+  
+.closeModalButton:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#guessingTextEntryBox {
+    width: 200px;
+    height: 30px;
+    font-size: 12pt;
+    border-radius: 0;
+    border: solid 1px black;
+}
+  
+.guessingTextEntry:focus {
+    /*outline: 1px solid rgb(47, 255, 217);*/
+    outline: none;
+    background-color: rgb(41, 68, 186);
+    color: white;
+}
+  
+.guessingTextEntry:focus::placeholder {
+    color: white;
+}
+
+
+#playerNames {
+    display: none;
+    box-sizing: border-box;
+    border-radius: 0px;
+    outline: none;
+    border: 1px solid black;
+    margin-top: 0px;
+    border-top-style: none;
+    padding: 0;
+    list-style-type: none;
+    width: 206px;
+}
+  
+#playerName {
+    padding: 10px;
+    user-select: none;
+}
+  
+#playerName:hover {
+    cursor: pointer;
+    background-color: #f2f2f2;
+}
+  
+#playerNamesDiv {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.highlightGreen {
+    background-color: rgb(42, 210, 42);
+    color: white;
+}
+  
+.highlightYellow {
+    background-color: rgb(243, 234, 56);
+    color: black;
+}
+
+
+
+
+#guessTable {
+    margin-top: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 65%;
+    border-collapse: collapse;
+    text-align: center;
+}
+  
+#guessTableHead {
+    position: sticky;
+    top: 70px;
+    border: 1px solid black;
+}
+  
+#namesColumnGuessing {
+    width: 20%;
+}
+  
+.generalStatsGuessing {
+    width: 4%;
+}
+
+#guessTableBody td {
+    border: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 10pt;
+}
