@@ -15,8 +15,7 @@ const Layout = () => {
       <div class="navDropDown">
           <button class="navDropDownButton" onClick={toggleNavDisplay}><i class="material-symbols-outlined">menu</i></button>
           <div class="navDropDownOptions" style={{display: display,}}>
-              <Link to="/"><p className="navPara">Home</p></Link>
-              <Link to="/stats"><p className="navPara">NBA Stats</p></Link>
+              <Link to="/"><p className="navPara">NBA Stats</p></Link>
               <Link to="/guess-the-player"><p className="navPara">Guess The NBA Player</p></Link>
           </div>
       </div>

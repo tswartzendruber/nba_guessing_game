@@ -343,6 +343,14 @@ const GuessThePlayer = () => {
           <span className="closeRulesModalButton" onClick={closeRulesModal}>&times;</span>
           <p id="rulesModalText">
             <h1>Rules</h1>
+            <p>Try to guess who the randomly generated player is.</p>
+            <p>For each guess, you will get hints in the table based on each statistical category.</p>
+            <p>If the stat is highlighted green, that means that stat matches the one of the random player.</p>
+            <p>If the stat is highlighted yellow, that means that stats is within two of the random player.</p>
+            <p>If the stat is not highlighted (grey), then there is no match.</p>
+            <p>Some categories also show arrows, with ↓ meaning that the stat of the random player is lower than what you guessed.</p>
+            <p>Also, simply refreshing the page will start the game over, picking another random player to guess.</p>
+            <p>Good luck!</p>
           </p>
         </div>
       </div>

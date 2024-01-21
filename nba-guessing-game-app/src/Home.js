@@ -36,27 +36,6 @@ Poole Party (Custom Game Mode)
 const Home = () => {
     return (
       <>
-        <div className="scroll">
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-          Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks Kyrie sucks <br/>
-        </div>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
-        <h1>Kyrie sucks</h1>
     </>
     );
   };

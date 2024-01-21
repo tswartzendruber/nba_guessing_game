@@ -16,8 +16,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="stats" element={<Stats />} />
+          <Route index element={<Stats />} />
           <Route path="guess-the-player" element={<GuessThePlayer />} />
           <Route path="*" element={<NoPage />} />
         </Route>
