@@ -18,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Stats />} />
           <Route path="guess-the-player" element={<GuessThePlayer />} />
+          <Route path="full-table" element={<Home />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

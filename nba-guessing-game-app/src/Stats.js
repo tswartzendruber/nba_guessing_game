@@ -3,262 +3,63 @@ import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 
 function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  var table, rows, switching, i, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("statsTable");
   switching = true;
 
-  dir = "asc"; 
+  // Get the current sorting direction from the table's data attribute
+  dir = table.getAttribute("data-sort-dir") === "asc" ? "desc" : "asc";
+  table.setAttribute("data-sort-dir", dir);
+
+  rows = Array.from(table.rows).slice(1); // Exclude the header row
+
   while (switching) {
     switching = false;
-    rows = table.rows;
-    for (i = 1; i < (rows.length - 1); i++) {
+    for (i = 0; i < rows.length - 1; i++) {
       shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (dir === "asc") {
-        // Checking if column has number stats
-        if (n > 2) {
-          if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
-            shouldSwitch= true;
-            break;
-          }
-        // Checking if column has player names
-        } else if (n === 0) {
-          if (x.innerHTML.split(" ")[1] === y.innerHTML.split(" ")[1]) {
-            if (x.innerHTML.split(" ")[0] > y.innerHTML.split(" ")[0]) {
-              shouldSwitch= true;
-              break;
-            }
-          } else {
-            if (x.innerHTML.split(" ")[1] > y.innerHTML.split(" ")[1]) {
-              shouldSwitch= true;
-              break;
-            }
-          }
-        // Checking if column has teams
-        } else if (n === 1) {
-          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            shouldSwitch= true;
-            break;
-          }
-        // Checking if column has positions
-        } else if (n === 2) {
-          let newX = x.innerHTML.split("-");
-          let newY = y.innerHTML.split("-");
+      const x = rows[i].getElementsByTagName("TD")[n].innerHTML;
+      const y = rows[i + 1].getElementsByTagName("TD")[n].innerHTML;
 
-          // Checking for a double position
-          if (newX.length > 1) {
-            if (newX[0] === "PG") {
-              newX = "125";
-            } else if (newX[0] === "SG") {
-              if (newX[1] === "PG") {
-                newX = "175";
-              } else {
-                newX = "225";
-              }
-            } else if (newX[0] === "SF") {
-              if (newX[1] === "PG" || newX[1] === "SG") {
-                newX = "275";
-              } else {
-                newX = "325";
-              }
-            } else if (newX[0] === "PF") {
-              if (newX[1] === "C") {
-                newX = "425";
-              } else {
-                newX = "375";
-              }
-            } else if (newX[0] === "C") {
-              newX = "475";
-            }
-          // Otherwise, a single position
-          } else {
-            if (newX[0] === "PG") {
-              newX = "100";
-            } else if (newX[0] === "SG") {
-              newX = "200";
-            } else if (newX[0] === "SF") {
-              newX = "300";
-            } else if (newX[0] === "PF") {
-              newX = "400";
-            } else if (newX[0] === "C") {
-              newX = "500";
-            }
-          }
+      let compareResult;
+      if (n > 2) {
+        compareResult = parseFloat(x) - parseFloat(y);
+      } else if (n === 0) {
+        const xName = x.split(" ");
+        const yName = y.split(" ");
+        compareResult = xName[1] === yName[1] ? xName[0].localeCompare(yName[0]) : xName[1].localeCompare(yName[1]);
+      } else if (n === 1) {
+        compareResult = x.toLowerCase().localeCompare(y.toLowerCase());
+      } else if (n === 2) {
+        const getPositionValue = position => {
+          const positionsMap = { 
+            "PG": 100, "PG-SG": 110, "PG-SF": 120, "PG-PF": 130, "PG-C": 140,
+            "SG": 200, "SG-PG": 175, "SG-SF": 210, "SG-PF": 220, "SG-C": 230,
+            "SF": 300, "SF-PG": 260, "SF-SG": 270, "SF-PF": 310, "SF-C": 320,
+            "PF": 400, "PF-PG": 330, "PF-SG": 340, "PF-SF": 350, "PF-C": 410,
+            "C": 500, "C-PG": 420, "C-SG": 430, "C-SF": 440, "C-PF": 450,
+          };
+          return positionsMap[position];
+        };
 
-          // Checking for a double position
-          if (newY.length > 1) {
-            if (newY[0] === "PG") {
-              newY = "125";
-            } else if (newY[0] === "SG") {
-              if (newY[1] === "PG") {
-                newY = "175";
-              } else {
-                newY = "225";
-              }
-            } else if (newY[0] === "SF") {
-              if (newY[1] === "PG" || newY[1] === "SG") {
-                newY = "275";
-              } else {
-                newY = "325";
-              }
-            } else if (newY[0] === "PF") {
-              if (newY[1] === "C") {
-                newY = "425";
-              } else {
-                newY = "375";
-              }
-            } else if (newY[0] === "C") {
-              newY = "475";
-            }
-          // Otherwise, a single position
-          } else {
-            if (newY[0] === "PG") {
-              newY = "100";
-            } else if (newY[0] === "SG") {
-              newY = "200";
-            } else if (newY[0] === "SF") {
-              newY = "300";
-            } else if (newY[0] === "PF") {
-              newY = "400";
-            } else if (newY[0] === "C") {
-              newY = "500";
-            }
-          }
-
-          if (newX > newY) {
-            shouldSwitch= true;
-            break;
-          }
-        }
-      } else if (dir === "desc") {
-        // Checking if column has number stats
-        if (n > 2) {
-          if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-            shouldSwitch= true;
-            break;
-          }
-        // Checking if column has player names
-        } else if (n === 0) {
-          if (x.innerHTML.split(" ")[1] === y.innerHTML.split(" ")[1]) {
-            if (x.innerHTML.split(" ")[0] < y.innerHTML.split(" ")[0]) {
-              shouldSwitch= true;
-              break;
-            }
-          } else {
-            if (x.innerHTML.split(" ")[1] < y.innerHTML.split(" ")[1]) {
-              shouldSwitch= true;
-              break;
-            }
-          }
-        // Checking if column has teams
-        } else if (n === 1) {
-          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            shouldSwitch= true;
-            break;
-          }
-        // Checking if column has positions
-        } else if (n === 2) {
-          let newX = x.innerHTML.split("-");
-          let newY = y.innerHTML.split("-");
-
-          // Checking for a double position
-          if (newX.length > 1) {
-            if (newX[0] === "PG") {
-              newX = "125";
-            } else if (newX[0] === "SG") {
-              if (newX[1] === "PG") {
-                newX = "175";
-              } else {
-                newX = "225";
-              }
-            } else if (newX[0] === "SF") {
-              if (newX[1] === "PG" || newX[1] === "SG") {
-                newX = "275";
-              } else {
-                newX = "325";
-              }
-            } else if (newX[0] === "PF") {
-              if (newX[1] === "C") {
-                newX = "425";
-              } else {
-                newX = "375";
-              }
-            } else if (newX[0] === "C") {
-              newX = "475";
-            }
-          // Otherwise, a single position
-          } else {
-            if (newX[0] === "PG") {
-              newX = "100";
-            } else if (newX[0] === "SG") {
-              newX = "200";
-            } else if (newX[0] === "SF") {
-              newX = "300";
-            } else if (newX[0] === "PF") {
-              newX = "400";
-            } else if (newX[0] === "C") {
-              newX = "500";
-            }
-          }
-
-          // Checking for a double position
-          if (newY.length > 1) {
-            if (newY[0] === "PG") {
-              newY = "125";
-            } else if (newY[0] === "SG") {
-              if (newY[1] === "PG") {
-                newY = "175";
-              } else {
-                newY = "225";
-              }
-            } else if (newY[0] === "SF") {
-              if (newY[1] === "PG" || newY[1] === "SG") {
-                newY = "275";
-              } else {
-                newY = "325";
-              }
-            } else if (newY[0] === "PF") {
-              if (newY[1] === "C") {
-                newY = "425";
-              } else {
-                newY = "375";
-              }
-            } else if (newY[0] === "C") {
-              newY = "475";
-            }
-          // Otherwise, a single position
-          } else {
-            if (newY[0] === "PG") {
-              newY = "100";
-            } else if (newY[0] === "SG") {
-              newY = "200";
-            } else if (newY[0] === "SF") {
-              newY = "300";
-            } else if (newY[0] === "PF") {
-              newY = "400";
-            } else if (newY[0] === "C") {
-              newY = "500";
-            }
-          }
-
-          if (newX < newY) {
-            shouldSwitch= true;
-            break;
-          }
-        }
+        compareResult = getPositionValue(x) - getPositionValue(y);
       }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;      
-    } else {
-      if (switchcount === 0 && dir === "asc") {
-        dir = "desc";
+
+      if ((dir === "asc" && compareResult > 0) || (dir === "desc" && compareResult < 0)) {
+        shouldSwitch = true;
+        const temp = rows[i];
+        rows[i] = rows[i + 1];
+        rows[i + 1] = temp;
         switching = true;
+        switchcount++;
       }
     }
+  }
+
+  // Update the table with the sorted rows
+  const tbody = table.tBodies[0];
+  tbody.innerHTML = "";
+  for (const row of rows) {
+    tbody.appendChild(row);
   }
 }
 
@@ -266,8 +67,6 @@ const Stats = () => {
 
   const [data, setData] = useState([]);
   const [season, setSeason] = useState("2023-24");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(50);
 
   useEffect(() => {
     // Reading data from csv file
@@ -300,12 +99,6 @@ const Stats = () => {
     };
     fetchData();
   }, [season]);
-
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="App">
@@ -350,7 +143,7 @@ const Stats = () => {
             </tr>
           </thead>
           <tbody>
-            {currentRows.map((row, index) => (
+            {data.map((row, index) => (
               <>
               <tr key={index}>
                 <td className="statsTableData">{row.Player}</td>
@@ -381,22 +174,6 @@ const Stats = () => {
         </table>
         </div>
 
-        <div className="pagination">
-        {[...Array(Math.ceil(data.length / rowsPerPage)).keys()].map(
-          (pageNumber) => (
-            <a
-              key={pageNumber}
-              href="#"
-              onClick={() => paginate(pageNumber + 1)}
-              className={
-                pageNumber + 1 === currentPage ? "active" : undefined
-              }
-            >
-              {pageNumber + 1}
-            </a>
-          )
-        )}
-        </div>
         </>
 
       ) : null}
@@ -404,5 +181,5 @@ const Stats = () => {
     </div>
   );
 }
-
+  
 export default Stats;
