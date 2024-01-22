@@ -1,3 +1,4 @@
+/*
 import './App.css';
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
@@ -177,3 +178,4 @@ const Home = () => {
 }
   
 export default Home;
+*/

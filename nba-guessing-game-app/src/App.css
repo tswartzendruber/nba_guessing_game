@@ -95,6 +95,12 @@ body {
     background-color: white;
     z-index: 1;
     user-select: none;
+    height: 50px;
+}
+
+.statsColumnArrow {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 #namesColumn {
@@ -290,9 +296,6 @@ body {
     background-color: rgb(243, 234, 56);
     color: black;
 }
-
-
-
 
 #guessTable {
     margin-top: 70px;
