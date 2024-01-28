@@ -152,7 +152,7 @@ const Stats = () => {
   };
 
   return (
-    <div className="App">
+    <div className="Stats">
       
       <div className="header">
         <h1>{season} NBA Stats</h1>
