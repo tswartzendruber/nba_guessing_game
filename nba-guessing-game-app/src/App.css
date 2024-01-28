@@ -3,7 +3,8 @@
 .navDropDown {
     position: fixed;
     top: 0;
-    background-color: rgb(240, 239, 239);
+    /*background: linear-gradient(to left, #085078, #318296);*/
+    background-color: #318296;
     z-index: 1;
     width: 100vw;
 }
@@ -11,20 +12,25 @@
 .navDropDownButton {
     border: none;
     padding: 14px 16px;
+    background-color: #318296;
 }
 
 .navDropDownButton:hover {
     cursor: pointer;
 }
 
+.material-symbols-outlined {
+    color: white;
+}
+
 .navDropDownOptions {
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #318296;
     width: 200px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.2);
 }
 
 .navDropDownOptions.open {
@@ -45,6 +51,12 @@
 
 .navPara:hover {
     background-color: #f2f2f2;
+    color: black;
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }
 
 /* ---------------------------------------------- */
@@ -59,6 +71,8 @@ html {
 body {
     height: 100%;
     overflow: hidden;
+    background: linear-gradient(to right, #085078, #68a9a1);
+    color: white;
 }
 
 /* ---------------------------------------------- */
@@ -66,21 +80,23 @@ body {
 /* Stats.js */
 
 .Stats {
-    min-height: 100vh;  /* Set a minimum height equal to the viewport height */
+    min-height: 100vh;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom right, #ff00cc, #3333ff);
     margin-top: 50px;
 }
 
 .header {
     padding-bottom: 34px;
     padding-top: 0px;
-    background: white;
     position: fixed;
     top: 50px;
     width: 99%;
     text-align: center;
+}
+
+.header select {
+    background-color: transparent;
 }
 
 .scroll {
@@ -95,13 +111,19 @@ body {
     margin-right: auto;
 }
 
+#dropdown {
+    color: white;
+    border: 1px solid white;
+}
+
 #statsTable {
     margin-left: auto;
     margin-right: 0;
-    width: 98%;
+    width: 100%;
     border-collapse: collapse;
     text-align: center;
     overflow-y: scroll;
+    color: black
 }
 
 #statsTableHead {
@@ -168,34 +190,43 @@ body {
     position: fixed;
     top: 65px;
     right: 10px;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
+    background-image: url("/public/basketball.jpg");
+    background-color: transparent;
+    background-size: cover;
+    color: white;
+    font-size: 25pt;
+    border: none;
+}
+
+#openRulesModalButton:hover {
+    cursor: pointer;
 }
 
 #rulesModal {
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 100px; /* Location of the box */
+    padding-top: 70px;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
 }
 
 .rulesModalContent {
-    background-color: #fefefe;
+    background: linear-gradient(to right, #68a9a1, #68a9a1);
+    color: white;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    width: 65%;
 }
 
 .closeRulesModalButton {
-    color: #aaaaaa;
+    color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -220,26 +251,26 @@ body {
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 100px; /* Location of the box */
+    padding-top: 100px;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    color: black;
 }
   
 .gameOverModalContent {
-    background-color: #fefefe;
+    background: linear-gradient(to right, #68a9a1, #68a9a1);
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    width: 65%;
+    color: white;
 }
   
 .closeModalButton {
-    color: #aaaaaa;
+    color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -257,19 +288,16 @@ body {
     font-size: 12pt;
     border-radius: 0;
     border: solid 1px black;
+    background-color: white;
+    color: black;
 }
   
 .guessingTextEntry:focus {
     /*outline: 1px solid rgb(47, 255, 217);*/
     outline: none;
-    background-color: rgb(41, 68, 186);
-    color: white;
+    background-color: white;
+    color: black;
 }
-  
-.guessingTextEntry:focus::placeholder {
-    color: white;
-}
-
 
 #playerNames {
     display: none;
@@ -282,6 +310,8 @@ body {
     padding: 0;
     list-style-type: none;
     width: 206px;
+    background-color: white;
+    color: black;
 }
   
 #playerName {
@@ -291,7 +321,8 @@ body {
   
 #playerName:hover {
     cursor: pointer;
-    background-color: #f2f2f2;
+    background-color: #085078;
+    color: white;
 }
   
 #playerNamesDiv {
@@ -319,6 +350,8 @@ body {
     width: 65%;
     border-collapse: collapse;
     text-align: center;
+    background-color: white;
+    color: black;
 }
   
 #guessTableHead {
